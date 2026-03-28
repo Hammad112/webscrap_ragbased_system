@@ -151,43 +151,7 @@ if 'current_kb_name' not in st.session_state:
 
 # Simple sidebar
 with st.sidebar:
-     
-    # Knowledge Base Management
-    st.subheader("📁 Knowledge Base")
-    
-    # List saved knowledge bases
-    saved_kbs = list_saved_knowledge_bases()
-    if saved_kbs:
-        selected_kb = st.selectbox("Saved Knowledge Bases", ["None"] + saved_kbs)
-        
-        if selected_kb != "None" and selected_kb != st.session_state.get('current_kb_name', 'None'):
-            if st.button("📂 Load Selected KB", key="load_kb"):
-                vector_store, metadata = load_knowledge_base(f"knowledge_bases/{selected_kb}")
-                if vector_store:
-                    # Build QA chain
-                    qa_chain_result = build_qa_chain(
-                        db=vector_store,
-                        groq_api_key=config.GROQ_API_KEY,
-                        model="llama-3.3-70b-versatile",
-                        temperature=0.0,
-                    )
-                    
-                    # Extract chain and retriever
-                    qa_chain, retriever = qa_chain_result
-                    
-                    st.session_state.vector_store = vector_store
-                    st.session_state.qa_chain = qa_chain
-                    st.session_state.retriever = retriever
-                    st.session_state.summary = f"Loaded knowledge base from: {metadata['url']}"
-                    st.session_state.chunks_count = metadata['chunks_count']
-                    st.session_state.processed_url = metadata['url']
-                    st.session_state.step = 2
-                    st.session_state.current_kb_name = selected_kb
-                    st.success(f"✅ Loaded {selected_kb}")
-                    st.rerun()
-    else:
-        st.info("No saved knowledge bases found")
-    
+         
     # Progress
     st.divider()
     st.subheader("🔄 Progress")
@@ -363,14 +327,3 @@ elif st.session_state.step == 2:
                 del st.session_state[key]
         st.rerun()
 
-# Footer
-st.markdown("---")
-st.markdown("""
-<div class="info-box">
-    <strong>💡 How to use:</strong><br>
-    1. Set GROQ_API_KEY in <code>.env</code> (local) or Streamlit secrets<br>
-    2. Enter URL and create knowledge base<br>
-    3. Ask questions and see answers<br>
-    4. View question history below
-</div>
-""", unsafe_allow_html=True)

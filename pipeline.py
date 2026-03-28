@@ -38,19 +38,7 @@ class Pipeline:
                  chunk_size: int       = 1000,
                  chunk_overlap: int    = 100,
                  temperature: float    = 0):
-        """
-        Create a new pipeline. Nothing runs yet — call run_all()
-        or call each step method individually.
-
-        Args:
-            url:             Webpage to scrape.
-            groq_api_key:    Your Groq API key.
-            llm_model:       Groq model name.
-            embedding_model: HuggingFace model for embeddings.
-            chunk_size:      Max characters per chunk.
-            chunk_overlap:   Overlap between chunks.
-            temperature:     LLM creativity (0=focused, 1=creative).
-        """
+      
         self.url             = url
         self.groq_api_key    = groq_api_key
         self.llm_model       = llm_model
