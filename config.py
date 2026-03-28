@@ -5,10 +5,20 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env file (local dev)
 load_dotenv()
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+
+# Streamlit Cloud / `streamlit run`: use App secrets or .streamlit/secrets.toml
+try:
+    import streamlit as st
+
+    _from_secrets = st.secrets.get("GROQ_API_KEY")
+    if _from_secrets:
+        GROQ_API_KEY = _from_secrets
+except Exception:
+    pass
 
 # Default URL - used when no runtime URL is provided
 TARGET_URL = "https://en.wikipedia.org/wiki/Web_scraping"

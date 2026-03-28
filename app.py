@@ -223,7 +223,7 @@ if st.session_state.step == 1:
     with col1:
         if st.button("🚀 Create Knowledge Base", type="primary", use_container_width=True):
             if not config.GROQ_API_KEY:
-                st.error("❌ Set API key in .env file")
+                st.error("❌ Set GROQ_API_KEY: local `.env` or Streamlit secrets (Cloud / `.streamlit/secrets.toml`)")
                 st.stop()
             
             if not validate_url(url):
@@ -368,7 +368,7 @@ st.markdown("---")
 st.markdown("""
 <div class="info-box">
     <strong>💡 How to use:</strong><br>
-    1. Set your API key in .env file<br>
+    1. Set GROQ_API_KEY in <code>.env</code> (local) or Streamlit secrets<br>
     2. Enter URL and create knowledge base<br>
     3. Ask questions and see answers<br>
     4. View question history below
