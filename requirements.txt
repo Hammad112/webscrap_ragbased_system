@@ -1,0 +1,31 @@
+# ============================================================
+# requirements.txt — Install everything with:
+#   pip install -r requirements.txt
+# ============================================================
+
+# Web scraping
+beautifulsoup4
+requests
+lxml
+
+# LangChain core
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+
+# Groq LLM (fast, free tier available)
+langchain-groq
+
+# HuggingFace embeddings (runs locally, no API key needed)
+sentence-transformers
+langchain-huggingface
+
+# Vector store (fast similarity search)
+faiss-cpu
+
+# Streamlit UI
+streamlit
+
+torch
+torchvision
