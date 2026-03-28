@@ -42,11 +42,3 @@ def clean_and_split(docs: list, chunk_size: int = 1000, chunk_overlap: int = 100
     return split_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
 
 
-def preview_chunks(chunks: list, n: int = 3) -> None:
-   ## Preview the chunks
-    print("=" * 60)
-    for i, chunk in enumerate(chunks[:n]):
-        print(f"\n--- Chunk {i + 1} ---")
-        print(chunk.page_content[:300])  # show first 300 chars
-        print(f"[...{len(chunk.page_content)} total chars]")
-    print("=" * 60)

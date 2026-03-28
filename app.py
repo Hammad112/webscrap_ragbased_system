@@ -1,5 +1,5 @@
 # ============================================================
-# app.py — Clean Step-by-Step Web Scraping RAG System
+# app.py - Streamlit app for the web scraping RAG system
 # ============================================================
 
 import streamlit as st
@@ -12,11 +12,9 @@ from rag.rag_system import (
     ask_question,
     summarize_page,
 )
-from utils.helpers import validate_api_key
 from urllib.parse import urlparse
-from storage import save_knowledge_base, load_knowledge_base, list_saved_knowledge_bases
+from storage import save_knowledge_base
 import time
-import os
 import re
 
 # Page configuration
