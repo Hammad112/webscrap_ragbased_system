@@ -9,6 +9,8 @@
 #   Step 5 → ask() 
 # ============================================================
 
+import config
+
 from scraper.web_scraper  import scrape_url
 from cleaner.text_cleaner import clean_and_split
 from rag.rag_system       import (
@@ -33,11 +35,11 @@ class Pipeline:
     """
 
     def __init__(self, url: str, groq_api_key: str,
-                 llm_model: str        = "llama-3.3-70b-versatile",
-                 embedding_model: str  = "all-MiniLM-L6-v2",
-                 chunk_size: int       = 1000,
-                 chunk_overlap: int    = 100,
-                 temperature: float    = 0):
+                 llm_model: str        = config.LLM_MODEL,
+                 embedding_model: str  = config.EMBEDDING_MODEL,
+                 chunk_size: int       = config.CHUNK_SIZE,
+                 chunk_overlap: int    = config.CHUNK_OVERLAP,
+                 temperature: float    = config.LLM_TEMPERATURE):
       
         self.url             = url
         self.groq_api_key    = groq_api_key
