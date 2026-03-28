@@ -17,10 +17,7 @@ def scrape_url(url: str) -> list:
         A list containing one Document object.
 
     """
-    print(f" Scraping: {url}")
-
     loader = WebBaseLoader(url)
     docs = loader.load()
 
-    print(f" Done! Got {len(docs[0].page_content):,} characters")
     return docs

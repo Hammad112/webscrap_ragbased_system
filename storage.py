@@ -30,6 +30,5 @@ def save_knowledge_base(vector_store: FAISS, chunks: list, url: str, save_dir: s
     
     with open(f"{save_dir}/metadata.pkl", 'wb') as f:
         pickle.dump(metadata, f)
-    
-    print(f"✅ Knowledge base saved to {save_dir}")
+
     return save_dir

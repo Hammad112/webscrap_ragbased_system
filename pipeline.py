@@ -72,13 +72,12 @@ class Pipeline:
         Download the webpage and store raw Documents in self.docs.
 
         Args:
-            log: A function to print messages (default: print).
-                 Streamlit passes st.write here so messages show in UI.
+            log: Callback for progress messages (default: print). Use st.write in Streamlit.
         """
-        log(f"📥 Step 1 — Scraping: {self.url}")
+        log(f"Step 1 — Scraping: {self.url}")
         self.docs = scrape_url(self.url)
         chars = len(self.docs[0].page_content)
-        log(f"   ✅ Got {chars:,} characters from the page")
+        log(f"  Got {chars:,} characters from the page")
         self.status["step1_scrape"] = True
 
     # ----------------------------------------------------------
@@ -94,13 +93,13 @@ class Pipeline:
         if not self.status["step1_scrape"]:
             raise RuntimeError("Run step1_scrape() first!")
 
-        log(f"🧹 Step 2 — Cleaning & splitting (chunk_size={self.chunk_size})")
+        log(f"Step 2 — Cleaning & splitting (chunk_size={self.chunk_size})")
         self.chunks = clean_and_split(
             self.docs,
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
         )
-        log(f"   ✅ Created {len(self.chunks)} chunks")
+        log(f"  Created {len(self.chunks)} chunks")
         self.status["step2_clean"] = True
 
     # ----------------------------------------------------------
@@ -116,13 +115,13 @@ class Pipeline:
         if not self.status["step1_scrape"]:
             raise RuntimeError("Run step1_scrape() first!")
 
-        log("📝 Step 3 — Summarizing page with AI...")
+        log("Step 3 — Summarizing page...")
         self.summary = summarize_page(
             self.docs,
             groq_api_key=self.groq_api_key,
             model=self.llm_model,
         )
-        log("   ✅ Summary ready")
+        log("  Summary ready")
         self.status["step3_summary"] = True
 
     # ----------------------------------------------------------
@@ -138,14 +137,14 @@ class Pipeline:
         if not self.status["step2_clean"]:
             raise RuntimeError("Run step2_clean() first!")
 
-        log(f"🔢 Step 4a — Building vector store ({self.embedding_model})...")
-        log("   (First run downloads the model — ~1 minute)")
+        log(f"Step 4a — Building vector store ({self.embedding_model})...")
+        log("  (First run downloads the embedding model; may take about a minute)")
         self.vector_store = build_vector_store(
             self.chunks,
             embedding_model=self.embedding_model,
         )
 
-        log(f"🤖 Step 4b — Connecting to Groq LLM ({self.llm_model})...")
+        log(f"Step 4b — Connecting to Groq LLM ({self.llm_model})...")
         self.qa_chain = build_qa_chain(
             db=self.vector_store,
             groq_api_key=self.groq_api_key,
@@ -153,7 +152,7 @@ class Pipeline:
             temperature=self.temperature,
         )
 
-        log("   ✅ RAG system ready — you can now ask questions!")
+        log("  RAG system ready.")
         self.status["step4_rag"] = True
 
     # ----------------------------------------------------------
@@ -173,7 +172,6 @@ class Pipeline:
 
         Example:
             answer = pipe.ask("What is web scraping?")
-            print(answer)
         """
         if not self.status["step4_rag"]:
             raise RuntimeError("Run step4_build_rag() (or run_all()) first!")
@@ -188,18 +186,18 @@ class Pipeline:
         After this you can call .ask() as many times as you want.
 
         Args:
-            log: Print function (default: print, or pass st.write for Streamlit).
+            log: Callback for progress messages (default: print). Use st.write in Streamlit.
 
         Example:
             pipe = Pipeline(url="...", groq_api_key="gsk_...")
             pipe.run_all()
-            print(pipe.ask("What is this page about?"))
+            pipe.ask("What is this page about?")
         """
         self.step1_scrape(log)
         self.step2_clean(log)
         self.step3_summarize(log)
         self.step4_build_rag(log)
-        log("\n🎉 Pipeline complete! Call pipe.ask('your question') to query.")
+        log("Pipeline complete. Use ask() to query the page.")
 
     # ----------------------------------------------------------
     # INFO — show current state

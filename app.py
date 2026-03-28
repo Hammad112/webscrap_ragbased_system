@@ -20,7 +20,6 @@ import re
 # Page configuration
 st.set_page_config(
     page_title="Web Scraping RAG System",
-    page_icon="🌐",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -98,7 +97,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header
-st.markdown('<div class="main-header">🌐 Web Scraping RAG System</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">Web Scraping RAG System</div>', unsafe_allow_html=True)
 st.markdown("---")
 
 # Helper functions
@@ -152,18 +151,18 @@ with st.sidebar:
          
     # Progress
     st.divider()
-    st.subheader("🔄 Progress")
+    st.subheader("Progress")
     if st.session_state.step == 1:
-        st.info("🔄 Step 1: Create Knowledge Base")
-        st.markdown("⬜ Step 2: Ask Questions")
+        st.info("Step 1: Create Knowledge Base")
+        st.markdown("Step 2: Ask Questions (pending)")
     elif st.session_state.step == 2:
-        st.success("✅ Step 1: Knowledge Base Ready")
-        st.info("🔄 Step 2: Ask Questions")
+        st.success("Step 1: Knowledge Base Ready")
+        st.info("Step 2: Ask Questions")
     
     # Current KB info
     if st.session_state.current_kb_name:
         st.markdown(f"**Current:** {st.session_state.current_kb_name}")
-        if st.button("🗑️ Clear KB", key="clear_kb"):
+        if st.button("Clear KB", key="clear_kb"):
             for key in ['step', 'vector_store', 'qa_chain', 'retriever', 'summary', 'chunks_count', 'processed_url', 'qa_history', 'current_kb_name']:
                 if key in st.session_state:
                     del st.session_state[key]
@@ -171,7 +170,7 @@ with st.sidebar:
 
 # Main content
 if st.session_state.step == 1:
-    st.markdown('<div class="step-header">📥 Step 1: Create Knowledge Base</div>', unsafe_allow_html=True)
+    st.markdown('<div class="step-header">Step 1: Create Knowledge Base</div>', unsafe_allow_html=True)
     
     # URL input
     url = st.text_input(
@@ -183,13 +182,13 @@ if st.session_state.step == 1:
     # Create button
     col1, col2 = st.columns([2, 1])
     with col1:
-        if st.button("🚀 Create Knowledge Base", type="primary", use_container_width=True):
+        if st.button("Create Knowledge Base", type="primary", use_container_width=True):
             if not config.GROQ_API_KEY:
-                st.error("❌ Set GROQ_API_KEY: local `.env` or Streamlit secrets (Cloud / `.streamlit/secrets.toml`)")
+                st.error("Set GROQ_API_KEY: local `.env` or Streamlit secrets (Cloud / `.streamlit/secrets.toml`)")
                 st.stop()
             
             if not validate_url(url):
-                st.error("❌ Enter valid URL")
+                st.error("Enter a valid URL")
                 st.stop()
             
             # Process
@@ -232,25 +231,25 @@ if st.session_state.step == 1:
                     st.session_state.step = 2
                     st.session_state.current_kb_name = kb_name
                     
-                    st.success(f"✅ Knowledge Base Created! {len(chunks)} chunks saved to disk")
+                    st.success(f"Knowledge Base Created. {len(chunks)} chunks saved to disk.")
                     st.rerun()
                     
                 except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+                    st.error(f"Error: {str(e)}")
     
     with col2:
-        st.markdown("**💾 Auto-save enabled**")
+        st.markdown("**Auto-save enabled**")
         st.markdown("Knowledge bases are saved to `knowledge_bases/` folder")
 
 elif st.session_state.step == 2:
-    st.markdown('<div class="step-header">💬 Step 2: Ask Questions</div>', unsafe_allow_html=True)
+    st.markdown('<div class="step-header">Step 2: Ask Questions</div>', unsafe_allow_html=True)
     
     # Show knowledge base status
     st.markdown(f"""
     <div class="step-complete">
-        <strong>✅ Knowledge Base Ready!</strong><br>
-        📄 URL: {st.session_state.processed_url}<br>
-        🧩 {st.session_state.chunks_count} chunks indexed
+        <strong>Knowledge Base Ready</strong><br>
+        URL: {st.session_state.processed_url}<br>
+        {st.session_state.chunks_count} chunks indexed
     </div>
     """, unsafe_allow_html=True)
     
@@ -261,9 +260,9 @@ elif st.session_state.step == 2:
     )
     
     # Ask button
-    if st.button("💬 Ask Question", type="primary", use_container_width=True):
+    if st.button("Ask Question", type="primary", use_container_width=True):
         if not question.strip():
-            st.error("❌ Enter a question")
+            st.error("Enter a question")
             st.stop()
         
         with st.spinner("Getting answer..."):
@@ -280,15 +279,15 @@ elif st.session_state.step == 2:
                     'timestamp': time.strftime("%H:%M:%S")
                 })
                 
-                st.success("✅ Answer ready!")
+                st.success("Answer ready.")
                 st.rerun()
                 
             except Exception as e:
-                st.error(f"❌ Error: {str(e)}")
+                st.error(f"Error: {str(e)}")
     
     # Show history
     if st.session_state.qa_history:
-        st.markdown('<div class="step-header">📊 Question History</div>', unsafe_allow_html=True)
+        st.markdown('<div class="step-header">Question History</div>', unsafe_allow_html=True)
         
         for i, qa in enumerate(reversed(st.session_state.qa_history), 1):
             with st.expander(f"Q{i}: {qa['question']} ({qa['timestamp']})", expanded=False):
@@ -296,9 +295,9 @@ elif st.session_state.step == 2:
                 
                 # Show relevant chunks
                 if 'relevant_chunks' in qa and qa['relevant_chunks']:
-                    st.markdown("**📚 Relevant Chunks Used:**")
+                    st.markdown("**Relevant chunks used:**")
                     for j, chunk in enumerate(qa['relevant_chunks'], 1):
-                        with st.expander(f"📄 Chunk {j}", expanded=False):
+                        with st.expander(f"Chunk {j}", expanded=False):
                             # Show chunk content (truncated)
                             content = chunk.page_content
                             if len(content) > 500:
@@ -308,18 +307,18 @@ elif st.session_state.step == 2:
     
     # Clear history button
     if st.session_state.qa_history:
-        if st.button("🗑️ Clear History"):
+        if st.button("Clear History"):
             st.session_state.qa_history = []
             st.rerun()
     
     # Show summary
     if st.session_state.summary:
-        st.markdown('<div class="step-header">📝 Page Summary</div>', unsafe_allow_html=True)
-        with st.expander("📄 View Summary", expanded=False):
+        st.markdown('<div class="step-header">Page Summary</div>', unsafe_allow_html=True)
+        with st.expander("View Summary", expanded=False):
             st.write(st.session_state.summary)
     
     # Start over button
-    if st.button("🔄 Start Over (New URL)"):
+    if st.button("Start Over (New URL)"):
         for key in ['step', 'vector_store', 'qa_chain', 'summary', 'chunks_count', 'processed_url', 'qa_history']:
             if key in st.session_state:
                 del st.session_state[key]

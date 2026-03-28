@@ -26,7 +26,6 @@ def split_documents(docs: list, chunk_size: int = 1000, chunk_overlap: int = 100
     )
 
     chunks = splitter.split_documents(docs)
-    print(f"✅ Created {len(chunks)} chunks from {len(docs)} document(s)")
     return chunks
 
 
@@ -35,8 +34,6 @@ def clean_and_split(docs: list, chunk_size: int = 1000, chunk_overlap: int = 100
     # Clean the text inside each Document object
     for doc in docs:
         doc.page_content = clean_text(doc.page_content)
-
-    print(f"✅ Cleaned {len(docs)} document(s)")
 
     # Now split into chunks
     return split_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap)

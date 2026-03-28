@@ -24,7 +24,6 @@ def build_vector_store(chunks: list, embedding_model: str = "all-MiniLM-L6-v2") 
     # FAISS.from_documents embeds every chunk and stores them
     db = FAISS.from_documents(chunks, embeddings)
 
-    print(f"Vector store ready! Indexed {len(chunks)} chunks")
     return db
 
 
@@ -99,9 +98,7 @@ def summarize_page(docs: list, groq_api_key: str,
         f"Text:\n{context}"
     )
 
-    print("📝 Summarizing page...")
     response = llm.invoke(prompt)
     summary = response.content
 
-    print("✅ Summary ready!")
     return summary
