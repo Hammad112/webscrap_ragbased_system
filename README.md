@@ -12,7 +12,10 @@ A beginner-friendly, modular Python project that:
 ```
 webscraping_rag_project/
 │
-├── config.py              ← Your API key and settings (edit this first!)
+├── config.py              ← Settings and env loading (API key from `.env` or Streamlit secrets)
+├── app.py                 ← Streamlit UI (main way to run the app)
+├── pipeline.py            ← Same flow as a Python class (for scripts / learning)
+├── storage.py             ← Saves FAISS index + metadata under `knowledge_bases/`
 │
 ├── scraper/
 │   ├── __init__.py
@@ -26,12 +29,8 @@ webscraping_rag_project/
 │   ├── __init__.py
 │   └── rag_system.py      ← Builds the AI Q&A system
 │
-├── utils/
-│   ├── __init__.py
-│   └── helpers.py         ← Small helper functions
-│
-├── main.py                ← Run this to start everything
-└── requirements.txt       ← All packages needed
+├── requirements.txt       ← All packages needed
+└── .env                   ← Create this locally: `GROQ_API_KEY=...` (not committed)
 ```
 
 ---
@@ -44,22 +43,27 @@ pip install -r requirements.txt
 ```
 
 ### Step 2 — Add your Groq API key
-Open `config.py` and paste your key:
-```python
-GROQ_API_KEY = "your_key_here"
-```
-Get a **free** key at 👉 https://console.groq.com
 
-### Step 3a — Run via terminal
-```bash
-python main.py
+Create a `.env` file in the project folder (same directory as `config.py`):
+
+```env
+GROQ_API_KEY=your_key_here
 ```
 
-### Step 3b — Run the Streamlit UI (testing)
+Get a **free** key at https://console.groq.com
+
+On **Streamlit Cloud**, use App secrets or `.streamlit/secrets.toml` with `GROQ_API_KEY` instead.
+
+### Step 3 — Run the Streamlit UI
 ```bash
 streamlit run app.py
 ```
+
 Opens at http://localhost:8501
+
+### Optional — Use the pipeline in code
+
+Import `Pipeline` from `pipeline.py` and call `run_all()` / `ask()` from your own script (see docstrings in that file).
 
 ---
 
